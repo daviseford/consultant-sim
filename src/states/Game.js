@@ -9,6 +9,7 @@ import Consultant from "../sprites/Consultant";
 import Kudos from "../sprites/Kudos";
 import {frictionUtil} from "../utils";
 
+
 const score = new Score();
 const lives = new Lives();
 
@@ -17,6 +18,7 @@ export default class extends Phaser.State {
   }
 
   preload() {
+
     this.map = this.game.add.tilemap('map');
     this.map.addTilesetImage('ground_1x1');
     this.map.addTilesetImage('walls_1x2');
@@ -82,16 +84,16 @@ export default class extends Phaser.State {
 
   update() {
 
-    // if (this.checkWinCondition()){
-    // console.log('you win')
-    // }
+    if (this.checkWinCondition()) {
+      this.state.start('Win');
+    }
 
     this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss]);
     this.game.physics.arcade.collide(this.consultant, this.groups.boss, this.consultantHitBoss);
     this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
     this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
     this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
-    if (this.cursors.up.isDown && this.consultant.body.blocked.down) {
+    if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
     } else if (this.cursors.down.isDown) {
       this.consultant.body.velocity.y = 200;
@@ -102,7 +104,6 @@ export default class extends Phaser.State {
     } else if (this.cursors.left.isDown) {
       this.consultant.body.velocity.x = -200;
     }
-
 
     this.scoreText.setText('Score: ' + score.getScore());
     this.lifeText.setText('Life: ' + lives.getLives());
@@ -117,8 +118,7 @@ export default class extends Phaser.State {
     lives.loseLife();
     consultant.kill();
     if (lives.getLives() === 0) {
-      console.log('you lose');
-      // TODO change state to endgame / get fired :)
+      this.state.start('Lose');
     } else {
       consultant.reset(260, 100)
     }
