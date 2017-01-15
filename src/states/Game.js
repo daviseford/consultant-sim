@@ -60,10 +60,14 @@ export default class extends Phaser.State {
 
     // Add kudos
     const kudoPos = [
-      {x: this.world.centerX - 200, y: this.world.centerY - 40},
-      {x: this.world.centerX - 100, y: this.world.centerY - 20},
-      {x: this.world.centerX - 500, y: this.world.centerY + 60},
-      {x: this.world.centerX + 60, y: this.world.centerY + 200},
+      {x: 120, y: 460},
+      {x: 130, y: 60},
+      {x: 1053, y: 100},
+      {x: 1519, y: 60},
+      {x: 286, y: 380},
+      {x: 569, y: 60},
+      {x: 850, y: 510},
+      {x: 973, y: 415},
       {x: this.world.centerX + 80, y: this.world.centerY},
       {x: this.world.centerX + 500, y: this.world.centerY + 60},
       {x: this.world.centerX + 700, y: this.world.centerY + 140},
@@ -84,7 +88,9 @@ export default class extends Phaser.State {
 
   update() {
 
-    if (this.checkWinCondition()) {
+    if (lives.getLives() === 0) {
+      this.state.start('Lose');
+    } else if (this.checkWinCondition()) {
       this.state.start('Win');
     }
 
@@ -117,12 +123,7 @@ export default class extends Phaser.State {
   consultantHitBoss(consultant, boss) {
     lives.loseLife();
     consultant.kill();
-    if (lives.getLives() === 0) {
-      this.state.start('Lose');
-    } else {
-      consultant.reset(260, 100)
-    }
-
+    consultant.reset(260, 100)
   }
 
   consultantHitKudos(consultant, kudos) {
