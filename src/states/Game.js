@@ -3,11 +3,11 @@ import Phaser from "phaser";
 import Score from "../helpers/Score";
 import Lives from "../helpers/Lives";
 import createBanner from "../helpers/Banner";
-// import StandardBall from "../sprites/StandardBall";
 import HeavyLargeBall from "../sprites/HeavyLargeBall";
+import StandardBall from "../sprites/StandardBall";
 import Consultant from "../sprites/Consultant";
 import Kudos from "../sprites/Kudos";
-import {frictionUtil} from "../utils";
+import {frictionUtil, getRandomInt} from "../utils";
 
 
 const score = new Score();
@@ -15,6 +15,7 @@ const lives = new Lives();
 
 export default class extends Phaser.State {
   init() {
+    this.consultantLoseLife = this.consultantLoseLife.bind(this);
   }
 
   preload() {
@@ -45,7 +46,7 @@ export default class extends Phaser.State {
 
     this.groups = {
       boss: this.game.add.group(),
-      // distractions: this.game.add.group(),
+      distractions: this.game.add.group(),
       kudos: this.game.add.group()
     };
 
@@ -60,14 +61,10 @@ export default class extends Phaser.State {
 
     // Add kudos
     const kudoPos = [
-      {x: 120, y: 460},
-      {x: 130, y: 60},
-      {x: 1053, y: 100},
-      {x: 1519, y: 60},
-      {x: 286, y: 380},
-      {x: 569, y: 60},
-      {x: 850, y: 510},
-      {x: 973, y: 415},
+      {x: 120, y: 460}, {x: 130, y: 60},
+      {x: 1053, y: 100}, {x: 1519, y: 60},
+      {x: 286, y: 380}, {x: 569, y: 60},
+      {x: 850, y: 510}, {x: 973, y: 415},
       {x: this.world.centerX + 80, y: this.world.centerY},
       {x: this.world.centerX + 500, y: this.world.centerY + 60},
       {x: this.world.centerX + 700, y: this.world.centerY + 140},
@@ -82,21 +79,36 @@ export default class extends Phaser.State {
       this.groups.kudos.add(newKudos);
     });
 
+    const distractionPos = [
+      {x: 100, y: 400, speed: [110, 90]},
+      {x: 768, y: 500},
+      {x: 1275, y: 400, speed: [90, 90]},
+    ];
+    distractionPos.forEach((pos) => {
+      const newDistraction = new StandardBall({
+        game: this,
+        speed: pos.speed ? pos.speed : [45, 45],
+        x: pos.x,
+        y: pos.y,
+        asset: getRandomInt(0, 5) > 3 ? 'email' : 'phone'
+      });
+      this.groups.distractions.add(newDistraction);
+    });
+
     this.cursors = this.game.input.keyboard.createCursorKeys();
   }
 
 
   update() {
 
-    if (lives.getLives() === 0) {
-      this.state.start('Lose');
-    } else if (this.checkWinCondition()) {
+    if (this.checkWinCondition()) {
       this.state.start('Win');
     }
 
-    this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss]);
-    this.game.physics.arcade.collide(this.consultant, this.groups.boss, this.consultantHitBoss);
+    this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss, this.groups.distractions]);
+    this.game.physics.arcade.collide(this.consultant, [this.groups.distractions, this.groups.boss], this.consultantLoseLife);
     this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
+
     this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
     this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
     if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
@@ -120,10 +132,14 @@ export default class extends Phaser.State {
     return score.getScore() === this.groups.kudos.length * score.getIncrement();
   }
 
-  consultantHitBoss(consultant, boss) {
+  consultantLoseLife(consultant, boss) {
     lives.loseLife();
     consultant.kill();
-    consultant.reset(260, 100)
+    if (lives.getLives() === 0) {
+      this.state.start('Lose');
+    } else {
+      consultant.reset(260, 100)
+    }
   }
 
   consultantHitKudos(consultant, kudos) {

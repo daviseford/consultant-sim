@@ -13,12 +13,6 @@ export const frictionUtil = (val, std_decrementer = 1) => {
   return val + std_decrementer <= 0 ? val + std_decrementer : val + 1;
 };
 
-export const ballHitBall = (ball1, ball2) => {
-  // Ball interaction here
-  // ball2.kill()
-};
-
-
 export const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
