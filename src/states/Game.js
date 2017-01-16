@@ -14,6 +14,8 @@ export default class extends Phaser.State {
   init() {
     this.scorer = new Score();
     this.lives = new Lives();
+    this.startPos = {x: 260, y: 100};
+    this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
@@ -41,13 +43,26 @@ export default class extends Phaser.State {
   create() {
     this.consultant = new Consultant({
       game: this,
-      x: 260,
-      y: 100,
+      x: this.startPos.x,
+      y: this.startPos.y,
       asset: 'suit'
     });
 
     this.game.add.existing(this.consultant);
+    this.addLevelGroups();
 
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+  }
+
+
+  update() {
+    this.checkWinCondition();
+    this.handlePhysics();
+    this.handleInput();
+    this.updateStatusText();
+  }
+
+  addLevelGroups() {
     this.groups = {
       boss: this.game.add.group(),
       distractions: this.game.add.group(),
@@ -63,7 +78,6 @@ export default class extends Phaser.State {
         })
     );
 
-    // Add kudos
     const kudoPos = [
       {x: 120, y: 460}, {x: 130, y: 60},
       {x: 1053, y: 100}, {x: 1519, y: 60},
@@ -98,19 +112,13 @@ export default class extends Phaser.State {
       });
       this.groups.distractions.add(newDistraction);
     });
-
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-  }
-
-
-  update() {
-    this.checkWinCondition();
-    this.handlePhysics();
-    this.handleInput();
-    this.updateStatusText();
   }
 
   handleInput() {
+    // Apply some friction to the consultant - simulate accurate conditions :)
+    this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
+    this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
+
     if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
     } else if (this.cursors.down.isDown) {
@@ -128,9 +136,6 @@ export default class extends Phaser.State {
     this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss, this.groups.distractions]);
     this.game.physics.arcade.collide(this.consultant, [this.groups.distractions, this.groups.boss], this.consultantLoseLife);
     this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
-
-    this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
-    this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
   }
 
   updateStatusText() {
@@ -149,7 +154,7 @@ export default class extends Phaser.State {
     if (this.lives.getLives() <= 0) {
       this.state.start('Lose');
     } else {
-      consultant.reset(260, 100)
+      consultant.reset(this.startPos.x, this.startPos.y)
     }
   }
 
