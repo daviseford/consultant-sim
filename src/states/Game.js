@@ -10,16 +10,19 @@ import Kudos from "../sprites/Kudos";
 import {frictionUtil, getRandomInt} from "../utils";
 
 
-const score = new Score();
-const lives = new Lives();
-
 export default class extends Phaser.State {
   init() {
+    this.scorer = new Score();
+    this.lives = new Lives();
+    this.checkWinCondition = this.checkWinCondition.bind(this);
+    this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.handlePhysics = this.handlePhysics.bind(this);
+    this.updateStatusText = this.updateStatusText.bind(this);
   }
 
   preload() {
-
     this.map = this.game.add.tilemap('map');
     this.map.addTilesetImage('ground_1x1');
     this.map.addTilesetImage('walls_1x2');
@@ -28,6 +31,11 @@ export default class extends Phaser.State {
     this.layer = this.map.createLayer('Tile Layer 1');
     this.layer.resizeWorld();
     this.layer.debugSettings.forceFullRedraw = true;
+
+    createBanner(this);
+
+    this.statusText = this.add.text(this.world.centerX - 150, this.game.height - 40, '');
+
   }
 
   create() {
@@ -39,10 +47,6 @@ export default class extends Phaser.State {
     });
 
     this.game.add.existing(this.consultant);
-
-    createBanner(this);
-    this.scoreText = this.add.text(this.world.centerX, this.game.height - 40, 'Score: ' + score.getScore());
-    this.lifeText = this.add.text(this.world.centerX - 125, this.game.height - 40, 'Life: ' + lives.getLives());
 
     this.groups = {
       boss: this.game.add.group(),
@@ -100,17 +104,13 @@ export default class extends Phaser.State {
 
 
   update() {
+    this.checkWinCondition();
+    this.handlePhysics();
+    this.handleInput();
+    this.updateStatusText();
+  }
 
-    if (this.checkWinCondition()) {
-      this.state.start('Win');
-    }
-
-    this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss, this.groups.distractions]);
-    this.game.physics.arcade.collide(this.consultant, [this.groups.distractions, this.groups.boss], this.consultantLoseLife);
-    this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
-
-    this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
-    this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
+  handleInput() {
     if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
     } else if (this.cursors.down.isDown) {
@@ -122,20 +122,31 @@ export default class extends Phaser.State {
     } else if (this.cursors.left.isDown) {
       this.consultant.body.velocity.x = -200;
     }
+  }
 
-    this.scoreText.setText('Score: ' + score.getScore());
-    this.lifeText.setText('Life: ' + lives.getLives());
+  handlePhysics() {
+    this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss, this.groups.distractions]);
+    this.game.physics.arcade.collide(this.consultant, [this.groups.distractions, this.groups.boss], this.consultantLoseLife);
+    this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
 
+    this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
+    this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
+  }
+
+  updateStatusText() {
+    this.statusText.setText(`Life: ${this.lives.getLives()}  Score: ${this.scorer.getScore()}  Time: ${Math.round(this.game.time.totalElapsedSeconds())}`);
   }
 
   checkWinCondition() {
-    return score.getScore() === this.groups.kudos.length * score.getIncrement();
+    if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
+      this.state.start('Win');
+    }
   }
 
   consultantLoseLife(consultant, boss) {
-    lives.loseLife();
+    this.lives.loseLife();
     consultant.kill();
-    if (lives.getLives() === 0) {
+    if (this.lives.getLives() <= 0) {
       this.state.start('Lose');
     } else {
       consultant.reset(260, 100)
@@ -144,7 +155,7 @@ export default class extends Phaser.State {
 
   consultantHitKudos(consultant, kudos) {
     kudos.kill();
-    score.incrementScore();
+    this.scorer.incrementScore();
   };
 
   render() {

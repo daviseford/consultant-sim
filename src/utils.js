@@ -5,12 +5,16 @@ export const centerGameObjects = (objects) => {
   })
 };
 
-export const frictionUtil = (val, std_decrementer = 1) => {
+/*
+ Simulates a friction-like effect.
+ Removes a certain amount of momentum per use.
+ */
+export const frictionUtil = (val, decrementer = 1) => {
   if (val === 0) return 0;
   if (val > 0) {
-    return val - std_decrementer >= 0 ? val - std_decrementer : val - 1;
+    return val - decrementer >= 0 ? val - decrementer : val - 1;
   }
-  return val + std_decrementer <= 0 ? val + std_decrementer : val + 1;
+  return val + decrementer <= 0 ? val + decrementer : val + 1;
 };
 
 export const getRandomInt = (min, max) => {

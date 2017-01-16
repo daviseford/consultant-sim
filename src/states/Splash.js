@@ -16,7 +16,6 @@ export default class extends Phaser.State {
     this.load.image('conf-call', 'assets/images/conf-call.png');
 
     this.load.spritesheet('suit', 'assets/images/suit.png', 32, 48);
-
   }
 
   create() {
