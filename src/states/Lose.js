@@ -19,6 +19,7 @@ export default class extends Phaser.State {
   }
 
   actionOnClick() {
+    this.game.time.reset();
     this.state.start('Game');
   }
 

@@ -14,7 +14,7 @@ export default class extends Phaser.State {
   init() {
     this.scorer = new Score();
     this.lives = new Lives();
-    this.startPos = {x: 260, y: 100};
+    this.player_startPos = {x: 260, y: 100};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
@@ -43,8 +43,8 @@ export default class extends Phaser.State {
   create() {
     this.consultant = new Consultant({
       game: this,
-      x: this.startPos.x,
-      y: this.startPos.y,
+      x: this.player_startPos.x,
+      y: this.player_startPos.y,
       asset: 'suit'
     });
 
@@ -79,10 +79,9 @@ export default class extends Phaser.State {
     );
 
     const kudoPos = [
-      {x: 120, y: 460}, {x: 130, y: 60},
-      {x: 1053, y: 100}, {x: 1519, y: 60},
-      {x: 286, y: 380}, {x: 569, y: 60},
-      {x: 850, y: 510}, {x: 973, y: 415},
+      {x: 15, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
+      {x: 1053, y: 100}, {x: 1519, y: 60}, {x: 286, y: 380},
+      {x: 569, y: 60}, {x: 850, y: 510}, {x: 973, y: 415},
       {x: this.world.centerX + 80, y: this.world.centerY},
       {x: this.world.centerX + 500, y: this.world.centerY + 60},
       {x: this.world.centerX + 700, y: this.world.centerY + 140},
@@ -154,7 +153,7 @@ export default class extends Phaser.State {
     if (this.lives.getLives() <= 0) {
       this.state.start('Lose');
     } else {
-      consultant.reset(this.startPos.x, this.startPos.y)
+      consultant.reset(this.player_startPos.x, this.player_startPos.y)
     }
   }
 
