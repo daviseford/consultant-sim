@@ -3,7 +3,7 @@ import "p2";
 import Phaser from "phaser";
 import BootState from "./states/Boot";
 import SplashState from "./states/Splash";
-import GameState from "./states/Game";
+import Level1State from "./states/Level1";
 import LoseState from "./states/Lose";
 import WinState from "./states/Win";
 
@@ -17,7 +17,7 @@ class Game extends Phaser.Game {
 
     this.state.add('Boot', BootState, false);
     this.state.add('Splash', SplashState, false);
-    this.state.add('Game', GameState, false);
+    this.state.add('Level1', Level1State, false);
     this.state.add('Lose', LoseState, false);
     this.state.add('Win', WinState, false);
 

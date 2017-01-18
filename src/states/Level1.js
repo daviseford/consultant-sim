@@ -25,11 +25,11 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.map = this.game.add.tilemap('map');
+    this.map = this.game.add.tilemap('level1');
     this.map.addTilesetImage('ground_1x1');
     this.map.addTilesetImage('walls_1x2');
     this.map.addTilesetImage('tiles2');
-    this.map.setCollisionBetween(1, 12);
+    this.map.setCollisionBetween(0, 26);
     this.layer = this.map.createLayer('Tile Layer 1');
     this.layer.resizeWorld();
     this.layer.debugSettings.forceFullRedraw = true;

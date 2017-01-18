@@ -20,7 +20,8 @@ export default class extends Phaser.State {
 
   actionOnClick() {
     this.game.time.reset();
-    this.state.start('Game');
+    // TODO Reset player on the current level, not level 1
+    this.state.start('Level1');
   }
 
 }
