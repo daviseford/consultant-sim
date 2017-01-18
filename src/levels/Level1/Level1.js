@@ -1,13 +1,13 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import Score from "../helpers/Score";
-import Lives from "../helpers/Lives";
-import createBanner from "../helpers/Banner";
-import HeavyLargeBall from "../sprites/HeavyLargeBall";
-import StandardBall from "../sprites/StandardBall";
-import Consultant from "../sprites/Consultant";
-import Kudos from "../sprites/Kudos";
-import {frictionUtil, getRandomInt} from "../utils";
+import Score from "../../helpers/Score";
+import Lives from "../../helpers/Lives";
+import createBanner from "../../helpers/Banner";
+import HeavyLargeBall from "../../sprites/HeavyLargeBall";
+import StandardBall from "../../sprites/StandardBall";
+import Consultant from "../../sprites/Consultant";
+import Kudos from "../../sprites/Kudos";
+import {frictionUtil, getRandomInt} from "../../utils";
 
 
 export default class extends Phaser.State {
@@ -79,12 +79,12 @@ export default class extends Phaser.State {
     );
 
     const kudoPos = [
-      {x: 15, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
+      {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
       {x: 1053, y: 100}, {x: 1519, y: 60}, {x: 286, y: 380},
       {x: 569, y: 60}, {x: 850, y: 510}, {x: 973, y: 415},
       {x: this.world.centerX + 80, y: this.world.centerY},
       {x: this.world.centerX + 500, y: this.world.centerY + 60},
-      {x: this.world.centerX + 700, y: this.world.centerY + 140},
+      {x: this.world.centerX + 700, y: this.world.centerY + 100},
     ];
 
     kudoPos.forEach((pos) => {
@@ -143,7 +143,7 @@ export default class extends Phaser.State {
 
   checkWinCondition() {
     if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
-      this.state.start('Win');
+      this.state.start('Level1_Win');
     }
   }
 
@@ -151,7 +151,7 @@ export default class extends Phaser.State {
     this.lives.loseLife();
     consultant.kill();
     if (this.lives.getLives() <= 0) {
-      this.state.start('Lose');
+      this.state.start('Level1_Lose');
     } else {
       consultant.reset(this.player_startPos.x, this.player_startPos.y)
     }

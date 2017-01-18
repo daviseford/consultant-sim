@@ -5,11 +5,15 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.load.image('button', 'assets/buttons/Retry_Norm.png', 193, 71);
+    this.load.image('button', 'assets/buttons/next_button.png', 193, 71);
   }
 
   create() {
-    let banner = this.add.text(this.world.centerX - 440, this.game.height - 500, 'You lose!');
+    let banner = this.add.text(
+        this.world.centerX - 440,
+        this.game.height - 500,
+        'You win!\n' + 'Time Elapsed: ' + Math.round(this.game.time.totalElapsedSeconds()) + ' seconds'
+    );
     banner.padding.set(10, 16);
     banner.fontSize = 40;
     banner.fill = '#77BFA3';
@@ -20,8 +24,7 @@ export default class extends Phaser.State {
 
   actionOnClick() {
     this.game.time.reset();
-    // TODO Reset player on the current level, not level 1
-    this.state.start('Level1');
+    this.state.start('Level2');
   }
 
 }
