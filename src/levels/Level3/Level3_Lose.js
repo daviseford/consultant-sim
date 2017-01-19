@@ -9,11 +9,7 @@ export default class extends Phaser.State {
   }
 
   create() {
-    let banner = this.add.text(
-        440,
-        550,
-        'You win this time...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
-    );
+    let banner = this.add.text(440, 550, 'You lose!');
     banner.padding.set(10, 16);
     banner.fontSize = 40;
     banner.fill = '#77BFA3';

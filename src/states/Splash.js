@@ -16,6 +16,7 @@ export default class extends Phaser.State {
     this.load.image('email', 'assets/images/email.png');
     this.load.image('phone', 'assets/images/phone_icon.png');
     this.load.image('conf-call', 'assets/images/conf-call.png');
+    this.load.image('promotion', 'assets/images/promotion.png');
 
     this.load.spritesheet('suit', 'assets/images/suit.png', 32, 48);
   }
