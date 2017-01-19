@@ -12,7 +12,7 @@ export default class extends Phaser.State {
     let banner = this.add.text(
         440,
         550,
-        'Let\'s see hoo you handle the next one...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
+        'Let\'s see how you handle the next one...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
     );
     banner.padding.set(10, 16);
     banner.fontSize = 40;

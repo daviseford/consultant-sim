@@ -1,9 +1,6 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import Score from "../../helpers/Score";
-import Lives from "../../helpers/Lives";
-import HUD from "../../helpers/HUD";
-import BestTime from "../../helpers/BestTime";
+import HUD from "../../hud/HUD";
 import Consultant from "../../sprites/Consultant";
 import Promotion from "../../sprites/Promotion";
 import Kudos from "../../sprites/Kudos";
@@ -12,18 +9,14 @@ import {frictionUtil} from "../../utils";
 
 export default class extends Phaser.State {
   init() {
-    this.best_time = new BestTime(window);
     this.level_name = 'level3';
-    this.lives = new Lives(4);
     this.player_startPos = {x: 215, y: 20};
-    this.scorer = new Score();
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handlePhysics = this.handlePhysics.bind(this);
-    this.getTime = this.getTime.bind(this);
     this.winLevel = this.winLevel.bind(this);
     this.addKudos = this.addKudos.bind(this);
   }
@@ -122,24 +115,21 @@ export default class extends Phaser.State {
   }
 
   checkWinCondition() {
-    if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
+    if (this.hud.getScore() === this.groups.kudos.length * this.hud.getIncrement()) {
       this.winLevel();
     }
   }
 
   winLevel() {
-    this.best_time.setHighScore(this.level_name, this.getTime());
+    this.hud.setBestTime();
     this.state.start('Level3_Win');
   }
 
-  getTime() {
-    return this.game.time.totalElapsedSeconds().toFixed(3);
-  }
 
   consultantLoseLife(consultant, boss) {
-    this.lives.loseLife();
+    this.hud.loseLife();
     consultant.kill();
-    if (this.lives.getLives() <= 0) {
+    if (this.hud.getLives() <= 0) {
       this.state.start('Level3_Lose');
     } else {
       this.groups.kudos.forEachDead((x) => x.kill());
@@ -150,7 +140,7 @@ export default class extends Phaser.State {
 
   consultantHitKudos(consultant, kudos) {
     kudos.kill();
-    this.scorer.incrementScore();
+    this.hud.incrementScore();
   };
 
   render() {

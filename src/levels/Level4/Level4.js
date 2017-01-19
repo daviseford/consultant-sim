@@ -1,9 +1,6 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import Score from "../../helpers/Score";
-import Lives from "../../helpers/Lives";
-import HUD from "../../helpers/HUD";
-import BestTime from "../../helpers/BestTime";
+import HUD from "../../hud/HUD";
 import HeavyLargeBall from "../../sprites/HeavyLargeBall";
 import StandardBall from "../../sprites/StandardBall";
 import Consultant from "../../sprites/Consultant";
@@ -13,18 +10,14 @@ import {frictionUtil, getRandomInt} from "../../utils";
 
 export default class extends Phaser.State {
   init() {
-    this.best_time = new BestTime(window);
     this.level_name = 'level4';
-    this.lives = new Lives(4);
     this.player_startPos = {x: 260, y: 100};
-    this.scorer = new Score();
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handlePhysics = this.handlePhysics.bind(this);
-    this.getTime = this.getTime.bind(this);
   }
 
   preload() {
@@ -157,20 +150,16 @@ export default class extends Phaser.State {
   }
 
   checkWinCondition() {
-    if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
-      this.best_time.setHighScore(this.level_name, this.getTime());
+    if (this.hud.getScore() === this.groups.kudos.length * this.hud.getIncrement()) {
+      this.hud.setBestTime();
       this.state.start('Level4_Win');
     }
   }
 
-  getTime() {
-    return this.game.time.totalElapsedSeconds().toFixed(3);
-  }
-
   consultantLoseLife(consultant, boss) {
-    this.lives.loseLife();
+    this.hud.loseLife();
     consultant.kill();
-    if (this.lives.getLives() <= 0) {
+    if (this.hud.getLives() <= 0) {
       this.state.start('Level4_Lose');
     } else {
       consultant.reset(this.player_startPos.x, this.player_startPos.y)
@@ -179,7 +168,7 @@ export default class extends Phaser.State {
 
   consultantHitKudos(consultant, kudos) {
     kudos.kill();
-    this.scorer.incrementScore();
+    this.hud.incrementScore();
   };
 
   render() {
