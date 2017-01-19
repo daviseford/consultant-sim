@@ -13,7 +13,7 @@ import {frictionUtil, getRandomInt} from "../../utils";
 export default class extends Phaser.State {
   init() {
     this.scorer = new Score();
-    this.lives = new Lives();
+    this.lives = new Lives(3);
     this.player_startPos = {x: 260, y: 100};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
@@ -81,7 +81,7 @@ export default class extends Phaser.State {
     const kudoPos = [
       {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
       {x: 1053, y: 100}, {x: 1519, y: 60}, {x: 286, y: 380},
-      {x: 569, y: 60}, {x: 850, y: 510}, {x: 973, y: 415},
+      {x: 569, y: 60}, {x: 830, y: 510}, {x: 973, y: 415},
       {x: this.world.centerX + 80, y: this.world.centerY},
       {x: this.world.centerX + 500, y: this.world.centerY + 60},
       {x: this.world.centerX + 700, y: this.world.centerY + 100},

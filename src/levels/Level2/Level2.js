@@ -13,7 +13,7 @@ import {frictionUtil, getRandomInt} from "../../utils";
 export default class extends Phaser.State {
   init() {
     this.scorer = new Score();
-    this.lives = new Lives();
+    this.lives = new Lives(4);
     this.player_startPos = {x: 260, y: 100};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
@@ -47,6 +47,11 @@ export default class extends Phaser.State {
       y: this.player_startPos.y,
       asset: 'suit'
     });
+    //  By default the Signal is empty, so we create it here:
+    this.consultant.body.onWorldBounds = new Phaser.Signal();
+
+    //  And then listen for it
+    this.consultant.body.onWorldBounds.add(this.consultantLoseLife, this);
 
     this.game.add.existing(this.consultant);
     this.addLevelGroups();
@@ -79,12 +84,13 @@ export default class extends Phaser.State {
     );
 
     const kudoPos = [
+      {x: 2930, y: 540}, {x: 3100, y: 60}, {x: 2700, y: 250},
+      {x: 2340, y: 190}, {x: 2350, y: 460}, {x: 2100, y: 100},
+      {x: 1649, y: 562}, {x: 1673, y: 393}, {x: 2100, y: 420},
+      {x: 60, y: 570}, {x: 445, y: 545}, {x: 1055, y: 160},
       {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
-      {x: 1053, y: 100}, {x: 1519, y: 60}, {x: 286, y: 380},
+      {x: 1053, y: 60}, {x: 1588, y: 195}, {x: 286, y: 380},
       {x: 569, y: 60}, {x: 850, y: 510}, {x: 973, y: 415},
-      {x: this.world.centerX + 80, y: this.world.centerY},
-      {x: this.world.centerX + 500, y: this.world.centerY + 60},
-      {x: this.world.centerX + 700, y: this.world.centerY + 100},
     ];
 
     kudoPos.forEach((pos) => {

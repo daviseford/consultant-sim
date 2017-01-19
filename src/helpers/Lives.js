@@ -1,6 +1,6 @@
 export default class Lives {
-  constructor() {
-    this.lives = 3;
+  constructor(lives) {
+    this.lives = lives;
   }
 
   getLives() {
