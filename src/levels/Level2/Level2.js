@@ -93,8 +93,9 @@ export default class extends Phaser.State {
     );
 
     const kudoPos = [
+      {x: 520, y: 450}, {x: 2065, y: 640}, {x: 2505, y: 264},
       {x: 2930, y: 540}, {x: 3100, y: 60}, {x: 2700, y: 250},
-      {x: 2340, y: 190}, {x: 2350, y: 460}, {x: 2100, y: 100},
+      {x: 2350, y: 190}, {x: 2350, y: 460}, {x: 2100, y: 100},
       {x: 1649, y: 562}, {x: 1673, y: 393}, {x: 2100, y: 420},
       {x: 60, y: 570}, {x: 445, y: 545}, {x: 1055, y: 160},
       {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
@@ -114,15 +115,15 @@ export default class extends Phaser.State {
     const distractionPos = [
       {x: 100, y: 400, speed: [110, 90]},
       {x: 2108, y: 100, speed: [120, 20]},
-      {x: 768, y: 500},
+      {x: 900, y: 500},
       {x: 1275, y: 400, speed: [90, 90]},
-      {x: 2112, y: 400, speed: [21, 12]},
+      {x: 2200, y: 400, speed: [21, 82]},
       {x: 2121, y: 600, speed: [200, -200]},
     ];
     distractionPos.forEach((pos) => {
       const newDistraction = new StandardBall({
         game: this,
-        speed: pos.speed ? pos.speed : [45, 45],
+        speed: pos.speed ? pos.speed : [75, 45],
         x: pos.x,
         y: pos.y,
         asset: getRandomInt(0, 5) > 3 ? 'email' : 'phone'
