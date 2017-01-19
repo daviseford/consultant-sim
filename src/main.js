@@ -9,6 +9,9 @@ import Level1_WinState from "./levels/Level1/Level1_Win";
 import Level2State from "./levels/Level2/Level2";
 import Level2_LoseState from "./levels/Level2/Level2_Lose";
 import Level2_WinState from "./levels/Level2/Level2_Win";
+// import Level3State from "./levels/Level3/Level3";
+// import Level3_LoseState from "./levels/Level3/Level3_Lose";
+// import Level3_WinState from "./levels/Level3/Level3_Win";
 
 class Game extends Phaser.Game {
 
@@ -28,6 +31,10 @@ class Game extends Phaser.Game {
     this.state.add('Level2', Level2State, false);
     this.state.add('Level2_Lose', Level2_LoseState, false);
     this.state.add('Level2_Win', Level2_WinState, false);
+
+    // this.state.add('Level3', Level3State, false);
+    // this.state.add('Level3_Lose', Level3_LoseState, false);
+    // this.state.add('Level3_Win', Level3_WinState, false);
 
     this.state.start('Boot');
   }

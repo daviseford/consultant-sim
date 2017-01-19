@@ -1,6 +1,8 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
 import Score from "../../helpers/Score";
+import HUD from "../../helpers/HUD";
+import BestTime from "../../helpers/BestTime";
 import Lives from "../../helpers/Lives";
 import createBanner from "../../helpers/Banner";
 import HeavyLargeBall from "../../sprites/HeavyLargeBall";
@@ -12,20 +14,22 @@ import {frictionUtil, getRandomInt} from "../../utils";
 
 export default class extends Phaser.State {
   init() {
-    this.scorer = new Score();
+    this.best_time = new BestTime(window);
+    this.level_name = 'level1';
     this.lives = new Lives(3);
     this.player_startPos = {x: 260, y: 100};
+    this.scorer = new Score();
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handlePhysics = this.handlePhysics.bind(this);
-    this.updateStatusText = this.updateStatusText.bind(this);
+    this.getTime = this.getTime.bind(this);
   }
 
   preload() {
-    this.map = this.game.add.tilemap('level1');
+    this.map = this.game.add.tilemap(this.level_name);
     this.map.addTilesetImage('ground_1x1');
     this.map.addTilesetImage('walls_1x2');
     this.map.addTilesetImage('tiles2');
@@ -36,8 +40,7 @@ export default class extends Phaser.State {
 
     createBanner(this);
 
-    this.statusText = this.add.text(this.world.centerX - 150, this.game.height - 40, '');
-
+    this.hud = new HUD(this);
   }
 
   create() {
@@ -59,7 +62,7 @@ export default class extends Phaser.State {
     this.checkWinCondition();
     this.handlePhysics();
     this.handleInput();
-    this.updateStatusText();
+    this.hud.updateHUD();
   }
 
   addLevelGroups() {
@@ -137,14 +140,15 @@ export default class extends Phaser.State {
     this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
   }
 
-  updateStatusText() {
-    this.statusText.setText(`Life: ${this.lives.getLives()}  Score: ${this.scorer.getScore()}  Time: ${Math.round(this.game.time.totalElapsedSeconds())}`);
-  }
-
   checkWinCondition() {
     if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
+      this.best_time.setHighScore(this.level_name, this.getTime());
       this.state.start('Level1_Win');
     }
+  }
+
+  getTime() {
+    return this.game.time.totalElapsedSeconds().toFixed(3);
   }
 
   consultantLoseLife(consultant, boss) {
