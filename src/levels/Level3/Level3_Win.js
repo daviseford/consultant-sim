@@ -5,14 +5,14 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.load.image('button', 'assets/buttons/Retry_Norm.png', 193, 71);
+    this.load.image('button', 'assets/buttons/next.png', 193, 71);
   }
 
   create() {
     let banner = this.add.text(
         440,
         550,
-        'You Beat The Game!\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
+        'Let\'s see hoo you handle the next one...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
     );
     banner.padding.set(10, 16);
     banner.fontSize = 40;
@@ -25,7 +25,7 @@ export default class extends Phaser.State {
 
   actionOnClick() {
     this.game.time.reset();
-    this.state.start('Level1');
+    this.state.start('Level4');
   }
 
 }

@@ -5,14 +5,14 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.load.image('button', 'assets/buttons/Retry_Norm.png', 193, 71);
+    this.load.image('button', 'assets/buttons/next.png', 193, 71);
   }
 
   create() {
     let banner = this.add.text(
         440,
         550,
-        'You win this time...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
+        'That was too easy anyways...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
     );
     banner.padding.set(10, 16);
     banner.fontSize = 40;

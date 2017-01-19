@@ -3,15 +3,18 @@ import "p2";
 import Phaser from "phaser";
 import BootState from "./states/Boot";
 import SplashState from "./states/Splash";
-import Level1State from "./levels/Level1/Level1";
 import Level1_LoseState from "./levels/Level1/Level1_Lose";
 import Level1_WinState from "./levels/Level1/Level1_Win";
-import Level2State from "./levels/Level2/Level2";
+import Level1State from "./levels/Level1/Level1";
 import Level2_LoseState from "./levels/Level2/Level2_Lose";
 import Level2_WinState from "./levels/Level2/Level2_Win";
-import Level3State from "./levels/Level3/Level3";
+import Level2State from "./levels/Level2/Level2";
 import Level3_LoseState from "./levels/Level3/Level3_Lose";
 import Level3_WinState from "./levels/Level3/Level3_Win";
+import Level3State from "./levels/Level3/Level3";
+import Level4_LoseState from "./levels/Level4/Level4_Lose";
+import Level4_WinState from "./levels/Level4/Level4_Win";
+import Level4State from "./levels/Level4/Level4";
 
 class Game extends Phaser.Game {
 
@@ -35,6 +38,10 @@ class Game extends Phaser.Game {
     this.state.add('Level3', Level3State, false);
     this.state.add('Level3_Lose', Level3_LoseState, false);
     this.state.add('Level3_Win', Level3_WinState, false);
+
+    this.state.add('Level4', Level4State, false);
+    this.state.add('Level4_Lose', Level4_LoseState, false);
+    this.state.add('Level4_Win', Level4_WinState, false);
 
     this.state.start('Boot');
   }

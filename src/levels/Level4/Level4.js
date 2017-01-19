@@ -1,9 +1,9 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
 import Score from "../../helpers/Score";
+import Lives from "../../helpers/Lives";
 import HUD from "../../helpers/HUD";
 import BestTime from "../../helpers/BestTime";
-import Lives from "../../helpers/Lives";
 import HeavyLargeBall from "../../sprites/HeavyLargeBall";
 import StandardBall from "../../sprites/StandardBall";
 import Consultant from "../../sprites/Consultant";
@@ -14,8 +14,8 @@ import {frictionUtil, getRandomInt} from "../../utils";
 export default class extends Phaser.State {
   init() {
     this.best_time = new BestTime(window);
-    this.level_name = 'level2';
-    this.lives = new Lives(3);
+    this.level_name = 'level4';
+    this.lives = new Lives(4);
     this.player_startPos = {x: 260, y: 100};
     this.scorer = new Score();
     this.addLevelGroups = this.addLevelGroups.bind(this);
@@ -36,6 +36,7 @@ export default class extends Phaser.State {
     this.layer = this.map.createLayer('Tile Layer 1');
     this.layer.resizeWorld();
     this.layer.debugSettings.forceFullRedraw = true;
+
     this.hud = new HUD(this);
   }
 
@@ -46,6 +47,11 @@ export default class extends Phaser.State {
       y: this.player_startPos.y,
       asset: 'suit'
     });
+    //  By default the Signal is empty, so we create it here:
+    this.consultant.body.onWorldBounds = new Phaser.Signal();
+
+    //  And then listen for it
+    this.consultant.body.onWorldBounds.add(this.consultantLoseLife, this);
 
     this.game.add.existing(this.consultant);
     this.addLevelGroups();
@@ -71,17 +77,30 @@ export default class extends Phaser.State {
     this.groups.boss.add(
         new HeavyLargeBall({
           game: this,
-          x: 1100,
-          y: 600,
+          x: this.world.centerX,
+          y: this.world.centerY,
+          asset: 'conf-call'
+        })
+    );
+
+    this.groups.boss.add(
+        new HeavyLargeBall({
+          game: this,
+          x: 2001,
+          y: 450,
           asset: 'conf-call'
         })
     );
 
     const kudoPos = [
-      {x: 670, y: 280}, {x: 380, y: 390}, {x: 490, y: 300},
-      {x: 985, y: 210},
-      {x: 154, y: 570}, {x: 1100, y: 167}, {x: 950, y: 595},
-      {x: 1100, y: 450}, {x: 1450, y: 90}, {x: 1450, y: 300},
+      {x: 520, y: 450}, {x: 2065, y: 640}, {x: 2505, y: 264},
+      {x: 2930, y: 540}, {x: 3100, y: 60}, {x: 2700, y: 250},
+      {x: 2350, y: 190}, {x: 2350, y: 460}, {x: 2100, y: 100},
+      {x: 1649, y: 562}, {x: 1673, y: 393}, {x: 2100, y: 420},
+      {x: 60, y: 570}, {x: 445, y: 545}, {x: 1055, y: 160},
+      {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
+      {x: 1053, y: 60}, {x: 1588, y: 195}, {x: 286, y: 380},
+      {x: 569, y: 60}, {x: 850, y: 510}, {x: 973, y: 415},
     ];
 
     kudoPos.forEach((pos) => {
@@ -94,17 +113,17 @@ export default class extends Phaser.State {
     });
 
     const distractionPos = [
-      {x: 500, y: 400, speed: [110, 90]},
-      {x: 600, y: 200, speed: [60, -70]},
-      {x: 41, y: 630, speed: [70, 200]},
-      {x: 768, y: 500},
+      {x: 100, y: 400, speed: [110, 90]},
+      {x: 2108, y: 100, speed: [120, 20]},
+      {x: 900, y: 500},
       {x: 1275, y: 400, speed: [90, 90]},
+      {x: 2200, y: 400, speed: [21, 82]},
+      {x: 2121, y: 600, speed: [200, -200]},
     ];
-
     distractionPos.forEach((pos) => {
       const newDistraction = new StandardBall({
         game: this,
-        speed: pos.speed ? pos.speed : [45, 45],
+        speed: pos.speed ? pos.speed : [75, 45],
         x: pos.x,
         y: pos.y,
         asset: getRandomInt(0, 5) > 3 ? 'email' : 'phone'
@@ -120,7 +139,7 @@ export default class extends Phaser.State {
 
     if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown && this.consultant.body.velocity.y <= 200) {
       this.consultant.body.velocity.y = 200;
     }
 
@@ -140,7 +159,7 @@ export default class extends Phaser.State {
   checkWinCondition() {
     if (this.scorer.getScore() === this.groups.kudos.length * this.scorer.getIncrement()) {
       this.best_time.setHighScore(this.level_name, this.getTime());
-      this.state.start('Level2_Win');
+      this.state.start('Level4_Win');
     }
   }
 
@@ -152,7 +171,7 @@ export default class extends Phaser.State {
     this.lives.loseLife();
     consultant.kill();
     if (this.lives.getLives() <= 0) {
-      this.state.start('Level2_Lose');
+      this.state.start('Level4_Lose');
     } else {
       consultant.reset(this.player_startPos.x, this.player_startPos.y)
     }

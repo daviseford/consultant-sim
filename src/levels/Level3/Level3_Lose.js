@@ -5,7 +5,7 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.load.image('button', 'assets/buttons/Retry_Norm.png', 193, 71);
+    this.load.image('button', 'assets/buttons/retry.png', 193, 71);
   }
 
   create() {

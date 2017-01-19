@@ -12,7 +12,7 @@ export default class extends Phaser.State {
     let banner = this.add.text(
         440,
         550,
-        'That was just a warmup!\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
+        'You win this time...\n' + 'Time Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
     );
     banner.padding.set(10, 16);
     banner.fontSize = 40;
@@ -25,7 +25,7 @@ export default class extends Phaser.State {
 
   actionOnClick() {
     this.game.time.reset();
-    this.state.start('Level2');
+    this.state.start('Level1');
   }
 
 }
