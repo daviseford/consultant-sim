@@ -10,8 +10,8 @@ export default class extends Phaser.State {
 
   create() {
     let banner = this.add.text(
-        this.world.centerX - 440,
-        this.game.height - 500,
+        440,
+        550,
         'You Beat The Game!\n' + 'Time Elapsed: ' + Math.round(this.game.time.totalElapsedSeconds()) + ' seconds'
     );
     banner.padding.set(10, 16);
@@ -19,7 +19,8 @@ export default class extends Phaser.State {
     banner.fill = '#77BFA3';
     banner.smoothed = false;
     banner.anchor.setTo(0.5);
-    let button = this.add.button(this.world.centerX - 600, this.game.height - 450, 'button', this.actionOnClick, this, 2, 1, 0);
+    let button = this.add.button(440, 300, 'button', this.actionOnClick, this, 2, 1, 0);
+    button.anchor.setTo(0.5);
   }
 
   actionOnClick() {

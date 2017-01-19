@@ -9,13 +9,14 @@ export default class extends Phaser.State {
   }
 
   create() {
-    let banner = this.add.text(this.world.centerX - 440, this.game.height - 500, 'You lose!');
+    let banner = this.add.text(440, 550, 'You lose!');
     banner.padding.set(10, 16);
     banner.fontSize = 40;
     banner.fill = '#77BFA3';
     banner.smoothed = false;
     banner.anchor.setTo(0.5);
-    let button = this.add.button(this.world.centerX - 600, this.game.height - 450, 'button', this.actionOnClick, this, 2, 1, 0);
+    let button = this.add.button(440, 300, 'button', this.actionOnClick, this, 2, 1, 0);
+    button.anchor.setTo(0.5);
   }
 
   actionOnClick() {
