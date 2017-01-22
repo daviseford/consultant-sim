@@ -5,10 +5,10 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.load.tilemap('Level1', 'assets/tilemaps/maps/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('Level2', 'assets/tilemaps/maps/level2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('Level3', 'assets/tilemaps/maps/level3.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.tilemap('Level4', 'assets/tilemaps/maps/level4.json', null, Phaser.Tilemap.TILED_JSON);
+    this.state.levelManager.getLevels().forEach((level) => {
+      this.load.tilemap(level.name, level.asset, null, Phaser.Tilemap.TILED_JSON);
+    });
+
     this.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
     this.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
     this.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');

@@ -6,10 +6,10 @@ import BootState from "./states/Boot";
 import SplashState from "./states/Splash";
 import LoseState from "./states/Lose";
 import WinState from "./states/Win";
-import Level1State from "./levels/Level1/Level1";
-import Level2State from "./levels/Level2/Level2";
-import Level3State from "./levels/Level3/Level3";
-import Level4State from "./levels/Level4/Level4";
+import SixteenSecondsState from "./levels/SixteenSeconds";
+import LongDropState from "./levels/LongDrop";
+import KudoHop1State from "./levels/KudoHop1";
+import LargeDungeon1State from "./levels/LargeDungeon1";
 
 class Game extends Phaser.Game {
 
@@ -25,16 +25,13 @@ class Game extends Phaser.Game {
     this.state.add('Win', WinState, false);
 
     const levels = [
-      {name: 'Level1', state: Level1State},
-      {name: 'Level2', state: Level2State},
-      {name: 'Level3', state: Level3State},
-      {name: 'Level4', state: Level4State},
+      {name: 'SixteenSeconds', state: SixteenSecondsState, asset: 'assets/tilemaps/maps/sixteen_seconds.json'},
+      {name: 'LongDrop', state: LongDropState, asset: 'assets/tilemaps/maps/long_drop1.json'},
+      {name: 'KudoHop1', state: KudoHop1State, asset: 'assets/tilemaps/maps/kudo_hop1.json'},
+      {name: 'LargeDungeon1', state: LargeDungeon1State, asset: 'assets/tilemaps/maps/large_dungeon1.json'},
     ];
 
-    this.state.levelManager = new LevelManager(levels.reduce((a, b) => {
-      a.push(b.name);
-      return a;
-    }, []));
+    this.state.levelManager = new LevelManager(levels);
 
     levels.map((x) => {
       this.state.add(x.name, x.state, false)

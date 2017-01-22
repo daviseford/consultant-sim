@@ -1,23 +1,23 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import HUD from "../../hud/HUD";
-import Consultant from "../../sprites/Consultant";
-import Promotion from "../../sprites/Promotion";
-import Kudos from "../../sprites/Kudos";
-import {frictionUtil} from "../../utils";
+import HUD from "../hud/HUD";
+import createBanner from "../helpers/Banner";
+import HeavyLargeBall from "../sprites/HeavyLargeBall";
+import StandardBall from "../sprites/StandardBall";
+import Consultant from "../sprites/Consultant";
+import Kudos from "../sprites/Kudos";
+import {frictionUtil, getRandomInt} from "../utils";
 
 
 export default class extends Phaser.State {
   init() {
-    this.player_startPos = {x: 215, y: 20};
+    this.player_startPos = {x: 260, y: 100};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
     this.consultantLoseLife = this.consultantLoseLife.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handlePhysics = this.handlePhysics.bind(this);
-    this.winLevel = this.winLevel.bind(this);
-    this.addKudos = this.addKudos.bind(this);
   }
 
   preload() {
@@ -30,6 +30,8 @@ export default class extends Phaser.State {
     this.layer.resizeWorld();
     this.layer.debugSettings.forceFullRedraw = true;
 
+    createBanner(this);
+
     this.hud = new HUD(this);
   }
 
@@ -40,11 +42,6 @@ export default class extends Phaser.State {
       y: this.player_startPos.y,
       asset: 'suit'
     });
-    //  By default the Signal is empty, so we create it here:
-    this.consultant.body.onWorldBounds = new Phaser.Signal();
-
-    //  And then listen for it
-    this.consultant.body.onWorldBounds.add(this.consultantLoseLife, this);
 
     this.game.add.existing(this.consultant);
     this.addLevelGroups();
@@ -62,23 +59,29 @@ export default class extends Phaser.State {
 
   addLevelGroups() {
     this.groups = {
-      kudos: this.game.add.group(),
-      promotions: this.game.add.group(),
+      boss: this.game.add.group(),
+      distractions: this.game.add.group(),
+      kudos: this.game.add.group()
     };
 
-    this.groups.promotions.add(new Promotion({
-      game: this,
-      x: 1060,
-      y: 600,
-    }));
-    this.addKudos();
-  }
+    this.groups.boss.add(
+        new HeavyLargeBall({
+          game: this,
+          x: this.world.centerX,
+          y: this.world.centerY,
+          asset: 'conf-call'
+        })
+    );
 
-  addKudos() {
     const kudoPos = [
-      {x: 910, y: 630}, {x: 700, y: 630}, {x: 500, y: 630},
-      {x: 1060, y: 500}, {x: 500, y: 60}, {x: 340, y: 200},
+      {x: 90, y: 290}, {x: 120, y: 460}, {x: 130, y: 60},
+      {x: 1053, y: 100}, {x: 1519, y: 60}, {x: 286, y: 380},
+      {x: 569, y: 60}, {x: 830, y: 510}, {x: 973, y: 415},
+      {x: this.world.centerX + 80, y: this.world.centerY},
+      {x: this.world.centerX + 500, y: this.world.centerY + 60},
+      {x: this.world.centerX + 700, y: this.world.centerY + 100},
     ];
+
     kudoPos.forEach((pos) => {
       const newKudos = new Kudos({
         game: this,
@@ -86,6 +89,22 @@ export default class extends Phaser.State {
         y: pos.y,
       });
       this.groups.kudos.add(newKudos);
+    });
+
+    const distractionPos = [
+      {x: 100, y: 400, speed: [110, 90]},
+      {x: 768, y: 500},
+      {x: 1275, y: 400, speed: [90, 90]},
+    ];
+    distractionPos.forEach((pos) => {
+      const newDistraction = new StandardBall({
+        game: this,
+        speed: pos.speed ? pos.speed : [45, 45],
+        x: pos.x,
+        y: pos.y,
+        asset: getRandomInt(0, 5) > 3 ? 'email' : 'phone'
+      });
+      this.groups.distractions.add(newDistraction);
     });
   }
 
@@ -96,7 +115,7 @@ export default class extends Phaser.State {
 
     if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
-    } else if (this.cursors.down.isDown && this.consultant.body.velocity.y <= 200) {
+    } else if (this.cursors.down.isDown) {
       this.consultant.body.velocity.y = 200;
     }
 
@@ -108,22 +127,17 @@ export default class extends Phaser.State {
   }
 
   handlePhysics() {
-    this.game.physics.arcade.collide(this.layer, [this.consultant]);
+    this.game.physics.arcade.collide(this.layer, [this.consultant, this.groups.boss, this.groups.distractions]);
+    this.game.physics.arcade.collide(this.consultant, [this.groups.distractions, this.groups.boss], this.consultantLoseLife);
     this.game.physics.arcade.overlap(this.consultant, this.groups.kudos, this.consultantHitKudos);
-    this.game.physics.arcade.overlap(this.consultant, this.groups.promotions, this.winLevel);
   }
 
   checkWinCondition() {
     if (this.hud.getScore() === this.groups.kudos.length * this.hud.getIncrement()) {
-      this.winLevel();
+      this.hud.setBestTime();
+      this.state.start('Win');
     }
   }
-
-  winLevel() {
-    this.hud.setBestTime();
-    this.state.start('Win');
-  }
-
 
   consultantLoseLife(consultant, boss) {
     this.hud.loseLife();
@@ -131,8 +145,6 @@ export default class extends Phaser.State {
     if (this.hud.getLives() <= 0) {
       this.state.start('Lose');
     } else {
-      this.groups.kudos.forEachDead((x) => x.kill());
-      this.addKudos();
       consultant.reset(this.player_startPos.x, this.player_startPos.y)
     }
   }

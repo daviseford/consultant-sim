@@ -1,11 +1,11 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import HUD from "../../hud/HUD";
-import HeavyLargeBall from "../../sprites/HeavyLargeBall";
-import StandardBall from "../../sprites/StandardBall";
-import Consultant from "../../sprites/Consultant";
-import Kudos from "../../sprites/Kudos";
-import {frictionUtil, getRandomInt} from "../../utils";
+import HUD from "../hud/HUD";
+import HeavyLargeBall from "../sprites/HeavyLargeBall";
+import StandardBall from "../sprites/StandardBall";
+import Consultant from "../sprites/Consultant";
+import Kudos from "../sprites/Kudos";
+import {frictionUtil, getRandomInt} from "../utils";
 
 
 export default class extends Phaser.State {
