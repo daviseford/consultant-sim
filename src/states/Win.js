@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 
 export default class extends Phaser.State {
-  init(win_text = 'You win.. this time.') {
-    this.win_text = win_text;
+  init(win_text = 'You win... this time.') {
     this.game_over = this.state.levelManager.isGameOver();
+    this.win_text = this.game_over ? 'You beat the game!' : win_text;
   }
 
   preload() {
