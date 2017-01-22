@@ -1,19 +1,14 @@
 import "pixi";
 import "p2";
 import Phaser from "phaser";
+import LevelManager from "./helpers/LevelManager";
 import BootState from "./states/Boot";
 import SplashState from "./states/Splash";
-import Level1_LoseState from "./levels/Level1/Level1_Lose";
-import Level1_WinState from "./levels/Level1/Level1_Win";
+import LoseState from "./states/Lose";
+import WinState from "./states/Win";
 import Level1State from "./levels/Level1/Level1";
-import Level2_LoseState from "./levels/Level2/Level2_Lose";
-import Level2_WinState from "./levels/Level2/Level2_Win";
 import Level2State from "./levels/Level2/Level2";
-import Level3_LoseState from "./levels/Level3/Level3_Lose";
-import Level3_WinState from "./levels/Level3/Level3_Win";
 import Level3State from "./levels/Level3/Level3";
-import Level4_LoseState from "./levels/Level4/Level4_Lose";
-import Level4_WinState from "./levels/Level4/Level4_Win";
 import Level4State from "./levels/Level4/Level4";
 
 class Game extends Phaser.Game {
@@ -26,22 +21,24 @@ class Game extends Phaser.Game {
 
     this.state.add('Boot', BootState, false);
     this.state.add('Splash', SplashState, false);
+    this.state.add('Lose', LoseState, false);
+    this.state.add('Win', WinState, false);
 
-    this.state.add('Level1', Level1State, false);
-    this.state.add('Level1_Lose', Level1_LoseState, false);
-    this.state.add('Level1_Win', Level1_WinState, false);
+    const levels = [
+      {name: 'Level1', state: Level1State},
+      {name: 'Level2', state: Level2State},
+      {name: 'Level3', state: Level3State},
+      {name: 'Level4', state: Level4State},
+    ];
 
-    this.state.add('Level2', Level2State, false);
-    this.state.add('Level2_Lose', Level2_LoseState, false);
-    this.state.add('Level2_Win', Level2_WinState, false);
+    this.state.levelManager = new LevelManager(levels.reduce((a, b) => {
+      a.push(b.name);
+      return a;
+    }, []));
 
-    this.state.add('Level3', Level3State, false);
-    this.state.add('Level3_Lose', Level3_LoseState, false);
-    this.state.add('Level3_Win', Level3_WinState, false);
-
-    this.state.add('Level4', Level4State, false);
-    this.state.add('Level4_Lose', Level4_LoseState, false);
-    this.state.add('Level4_Win', Level4_WinState, false);
+    levels.map((x) => {
+      this.state.add(x.name, x.state, false)
+    });
 
     this.state.start('Boot');
   }

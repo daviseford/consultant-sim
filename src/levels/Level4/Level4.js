@@ -10,7 +10,6 @@ import {frictionUtil, getRandomInt} from "../../utils";
 
 export default class extends Phaser.State {
   init() {
-    this.level_name = 'level4';
     this.player_startPos = {x: 260, y: 100};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
@@ -21,7 +20,7 @@ export default class extends Phaser.State {
   }
 
   preload() {
-    this.map = this.game.add.tilemap(this.level_name);
+    this.map = this.game.add.tilemap(this.state.levelManager.getCurrentLevel());
     this.map.addTilesetImage('ground_1x1');
     this.map.addTilesetImage('walls_1x2');
     this.map.addTilesetImage('tiles2');
@@ -152,7 +151,7 @@ export default class extends Phaser.State {
   checkWinCondition() {
     if (this.hud.getScore() === this.groups.kudos.length * this.hud.getIncrement()) {
       this.hud.setBestTime();
-      this.state.start('Level4_Win');
+      this.state.start('Win');
     }
   }
 
@@ -160,7 +159,7 @@ export default class extends Phaser.State {
     this.hud.loseLife();
     consultant.kill();
     if (this.hud.getLives() <= 0) {
-      this.state.start('Level4_Lose');
+      this.state.start('Lose');
     } else {
       consultant.reset(this.player_startPos.x, this.player_startPos.y)
     }

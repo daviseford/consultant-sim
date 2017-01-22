@@ -1,7 +1,8 @@
 import Phaser from "phaser";
 
 export default class extends Phaser.State {
-  init() {
+  init(lose_text = 'You lose! Try again?') {
+    this.lose_text = lose_text;
   }
 
   preload() {
@@ -9,19 +10,19 @@ export default class extends Phaser.State {
   }
 
   create() {
-    let banner = this.add.text(440, 550, 'You lose!');
+    let banner = this.add.text(440, 550, this.lose_text);
     banner.padding.set(10, 16);
     banner.fontSize = 40;
     banner.fill = '#77BFA3';
     banner.smoothed = false;
     banner.anchor.setTo(0.5);
-    let button = this.add.button(440, 300, 'button', this.actionOnClick, this, 2, 1, 0);
+    let button = this.add.button(440, 300, 'button', this.restartLevel, this, 2, 1, 0);
     button.anchor.setTo(0.5);
   }
 
-  actionOnClick() {
+  restartLevel() {
     this.game.time.reset();
-    this.state.start('Level3');
+    this.state.start(this.state.levelManager.getCurrentLevel());
   }
 
 }
