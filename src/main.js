@@ -10,6 +10,7 @@ import SixteenSecondsState from "./levels/SixteenSeconds";
 import LongDropState from "./levels/LongDrop";
 import KudoHop1State from "./levels/KudoHop1";
 import LargeDungeon1State from "./levels/LargeDungeon1";
+// import LargeDungeon2State from "./levels/LargeDungeon2";
 
 class Game extends Phaser.Game {
 
@@ -25,6 +26,7 @@ class Game extends Phaser.Game {
     this.state.add('Win', WinState, false);
 
     const levels = [
+      // {name: 'LargeDungeon2', state: LargeDungeon2State, asset: 'assets/tilemaps/maps/large_dungeon2.json'},
       {name: 'SixteenSeconds', state: SixteenSecondsState, asset: 'assets/tilemaps/maps/sixteen_seconds.json'},
       {name: 'LongDrop', state: LongDropState, asset: 'assets/tilemaps/maps/long_drop1.json'},
       {name: 'KudoHop1', state: KudoHop1State, asset: 'assets/tilemaps/maps/kudo_hop1.json'},

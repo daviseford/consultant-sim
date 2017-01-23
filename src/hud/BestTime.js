@@ -1,4 +1,4 @@
-export default class HighScore {
+export default class {
   constructor(window) {
     this.window = window;
   }

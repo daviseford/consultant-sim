@@ -8,7 +8,7 @@ export default class HUD {
     this.scorer = new Score();
     this.best_time = new BestTime(window);
     this.lives = new Lives(3);
-    this.level_name = this.state.level_name;
+    this.level_name = this.state.state.levelManager.getCurrentLevel();
 
 
     this.textStyle = {
