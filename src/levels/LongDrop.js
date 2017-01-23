@@ -86,8 +86,8 @@ export default class extends Phaser.State {
     });
 
     const distractionPos = [
-      {x: 500, y: 400, speed: [110, 90]},
-      {x: 600, y: 200, speed: [60, -70]},
+      {x: 500, y: 400, speed: [100, 90]},
+      {x: 600, y: 200, speed: [60, -60]},
       {x: 41, y: 630, speed: [70, 200]},
       {x: 768, y: 500},
       {x: 1275, y: 400, speed: [90, 90]},

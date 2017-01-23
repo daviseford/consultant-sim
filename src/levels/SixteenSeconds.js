@@ -11,7 +11,7 @@ import {frictionUtil, getRandomInt} from "../utils";
 
 export default class extends Phaser.State {
   init() {
-    this.player_startPos = {x: 260, y: 100};
+    this.player_startPos = {x: 260, y: 200};
     this.addLevelGroups = this.addLevelGroups.bind(this);
     this.checkWinCondition = this.checkWinCondition.bind(this);
     this.consultantHitKudos = this.consultantHitKudos.bind(this);
