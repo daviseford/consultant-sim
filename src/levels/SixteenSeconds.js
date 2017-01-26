@@ -44,9 +44,9 @@ export default class extends Phaser.State {
     });
 
     this.game.add.existing(this.consultant);
-    this.addLevelGroups();
-
     this.cursors = this.game.input.keyboard.createCursorKeys();
+
+    this.addLevelGroups();
   }
 
 
@@ -93,13 +93,13 @@ export default class extends Phaser.State {
 
     const distractionPos = [
       {x: 100, y: 400, speed: [110, 90]},
-      {x: 768, y: 500},
+      {x: 768, y: 500, speed: [50, 50]},
       {x: 1275, y: 400, speed: [90, 90]},
     ];
     distractionPos.forEach((pos) => {
       const newDistraction = new StandardBall({
         game: this,
-        speed: pos.speed ? pos.speed : [45, 45],
+        speed: pos.speed,
         x: pos.x,
         y: pos.y,
         asset: getRandomInt(0, 5) > 3 ? 'email' : 'phone'

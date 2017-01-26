@@ -47,9 +47,9 @@ export default class extends Phaser.State {
     this.consultant.body.onWorldBounds.add(this.consultantLoseLife, this);
 
     this.game.add.existing(this.consultant);
-    this.addLevelGroups();
-
     this.cursors = this.game.input.keyboard.createCursorKeys();
+
+    this.addLevelGroups();
   }
 
 
