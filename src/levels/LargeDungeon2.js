@@ -1,4 +1,3 @@
-/* globals __DEV__ */
 import Phaser from "phaser";
 import HUD from "../hud/HUD";
 import Consultant from "../sprites/Consultant";
@@ -171,10 +170,4 @@ export default class extends Phaser.State {
     this.hud.incrementScore();
   };
 
-  render() {
-    if (__DEV__) {
-      this.game.debug.spriteInfo(this.consultant, 32, 32)
-    }
-
-  }
 }

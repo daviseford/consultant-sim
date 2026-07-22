@@ -58,6 +58,13 @@ export default class TouchControls {
     return this.controls[control] === true;
   }
 
+  setVisible(visible) {
+    if (!this.element) return;
+
+    this.reset();
+    this.element.classList.toggle('is-hidden', !visible);
+  }
+
   reset() {
     CONTROL_NAMES.forEach((control) => {
       this.controls[control] = false;
