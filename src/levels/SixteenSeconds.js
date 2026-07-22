@@ -37,7 +37,7 @@ export default class extends Phaser.State {
 
   create() {
     this.consultant = new Consultant({
-      game: this,
+      game: this.game,
       x: this.player_startPos.x,
       y: this.player_startPos.y,
       asset: 'suit'
@@ -66,7 +66,7 @@ export default class extends Phaser.State {
 
     this.groups.boss.add(
         new HeavyLargeBall({
-          game: this,
+          game: this.game,
           x: this.world.centerX,
           y: this.world.centerY,
           asset: 'conf-call'
@@ -84,7 +84,7 @@ export default class extends Phaser.State {
 
     kudoPos.forEach((pos) => {
       const newKudos = new Kudos({
-        game: this,
+        game: this.game,
         x: pos.x,
         y: pos.y,
       });
@@ -98,7 +98,7 @@ export default class extends Phaser.State {
     ];
     distractionPos.forEach((pos) => {
       const newDistraction = new StandardBall({
-        game: this,
+        game: this.game,
         speed: pos.speed,
         x: pos.x,
         y: pos.y,
@@ -109,19 +109,22 @@ export default class extends Phaser.State {
   }
 
   handleInput() {
+    const touch = this.game.touchControls;
+
     // Apply some friction to the consultant - simulate accurate conditions :)
     this.consultant.body.velocity.y = frictionUtil(this.consultant.body.velocity.y, 3);
     this.consultant.body.velocity.x = frictionUtil(this.consultant.body.velocity.x, 20);
 
-    if (this.cursors.up.isDown && (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
+    if ((this.cursors.up.isDown || touch.isDown('up')) &&
+        (this.consultant.body.onFloor() || this.consultant.body.touching.down)) {
       this.consultant.body.velocity.y = -550;
-    } else if (this.cursors.down.isDown) {
+    } else if (this.cursors.down.isDown || touch.isDown('down')) {
       this.consultant.body.velocity.y = 200;
     }
 
-    if (this.cursors.right.isDown) {
+    if (this.cursors.right.isDown || touch.isDown('right')) {
       this.consultant.body.velocity.x = 200;
-    } else if (this.cursors.left.isDown) {
+    } else if (this.cursors.left.isDown || touch.isDown('left')) {
       this.consultant.body.velocity.x = -200;
     }
   }

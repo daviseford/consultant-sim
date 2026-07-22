@@ -15,9 +15,11 @@ export default class extends Phaser.State {
   }
 
   create() {
+    const centerX = this.game.width / 2;
+
     let banner = this.add.text(
-        440,
-        550,
+        centerX,
+        this.game.height / 2 + 150,
         this.win_text + '\nTime Elapsed: ' + this.game.time.totalElapsedSeconds().toFixed(3) + ' seconds'
     );
     banner.padding.set(10, 16);
@@ -25,7 +27,7 @@ export default class extends Phaser.State {
     banner.fill = '#77BFA3';
     banner.smoothed = false;
     banner.anchor.setTo(0.5);
-    let button = this.add.button(440, 300, 'button', this.actionOnClick, this, 2, 1, 0);
+    let button = this.add.button(centerX, this.game.height / 2 - 100, 'button', this.actionOnClick, this, 2, 1, 0);
     button.anchor.setTo(0.5);
   }
 

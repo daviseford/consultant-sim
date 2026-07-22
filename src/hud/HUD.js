@@ -17,7 +17,11 @@ export default class HUD {
       boundsAlignH: "center",
       boundsAlignV: "middle"
     };
-    this.hud = this.state.add.text(100, this.state.game.height - 80, '', this.textStyle);
+    const touchScreen = window.matchMedia('(any-pointer: coarse)').matches || window.innerWidth <= 900;
+    const x = touchScreen ? 24 : 100;
+    const y = touchScreen ? 24 : this.state.game.height - 80;
+
+    this.hud = this.state.add.text(x, y, '', this.textStyle);
     this.hud.fixedToCamera = true;
     this.hud.setShadow(2, 2, 'rgba(255,255,255,1)', 0.1);
 

@@ -2,6 +2,7 @@ import "pixi";
 import "p2";
 import Phaser from "phaser";
 import LevelManager from "./helpers/LevelManager";
+import TouchControls from "./helpers/TouchControls";
 import BootState from "./states/Boot";
 import SplashState from "./states/Splash";
 import LoseState from "./states/Lose";
@@ -12,13 +13,29 @@ import KudoHop1State from "./levels/KudoHop1";
 import LargeDungeon1State from "./levels/LargeDungeon1";
 // import LargeDungeon2State from "./levels/LargeDungeon2";
 
+const LANDSCAPE_WIDTH = 1280;
+const PORTRAIT_WIDTH = 704;
+const GAME_HEIGHT = 704;
+
+const getGameWidth = () => window.innerWidth >= window.innerHeight ? LANDSCAPE_WIDTH : PORTRAIT_WIDTH;
+
 class Game extends Phaser.Game {
 
   constructor() {
-    let width = document.documentElement.clientWidth;
-    let height = document.documentElement.clientHeight > 1024 ? 1024 : document.documentElement.clientHeight;
+    super({
+      width: getGameWidth(),
+      height: GAME_HEIGHT,
+      renderer: Phaser.CANVAS,
+      parent: 'content',
+      antialias: false,
+      crisp: true,
+      roundPixels: true,
+      scaleMode: Phaser.ScaleManager.SHOW_ALL,
+      alignH: true,
+      alignV: true
+    });
 
-    super(width, height, Phaser.CANVAS, 'content', null);
+    this.touchControls = new TouchControls(document.getElementById('touch-controls'));
 
     this.state.add('Boot', BootState, false);
     this.state.add('Splash', SplashState, false);
@@ -40,6 +57,14 @@ class Game extends Phaser.Game {
     });
 
     this.state.start('Boot');
+  }
+
+  resizeGame(scale, parentBounds) {
+    const width = parentBounds.width >= parentBounds.height ? LANDSCAPE_WIDTH : PORTRAIT_WIDTH;
+
+    if (this.width !== width || this.height !== GAME_HEIGHT) {
+      scale.setGameSize(width, GAME_HEIGHT);
+    }
   }
 
 }

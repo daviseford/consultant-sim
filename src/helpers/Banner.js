@@ -1,5 +1,5 @@
 export default function createBanner(state) {
-  state.banner = state.add.text(630, 245, 'Consultant Simulator');
+  state.banner = state.add.text(Math.min(630, state.game.width / 2), 245, 'Consultant Simulator');
   state.banner.padding.set(10, 16);
   state.banner.fontSize = 40;
   state.banner.fill = '#77BFA3';
