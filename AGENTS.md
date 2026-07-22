@@ -27,3 +27,12 @@
 - Keep changes compatible with the existing Babel 6/Webpack 1 toolchain unless an upgrade is explicitly requested.
 - Run `npm run deploy` after source changes and check the affected flow in Chrome at desktop and mobile viewport sizes.
 - Do not edit generated files in `dist` by hand; rebuild them with `npm run deploy`.
+
+## Production Deployment
+
+- Production is served from `s3://daviseford.com/consultant_simulator/` through CloudFront distribution `EOV559H6J3O6V`.
+- Build first with `npm run deploy`, then upload `index.html`, `dist/bundle.js`, `dist/vendor.bundle.js`, and any new assets beneath the same S3 prefix.
+- Never sync or delete the whole `daviseford.com` bucket; it contains unrelated sites and files.
+- Set HTML and stable-named JavaScript bundles to revalidate instead of caching indefinitely.
+- Invalidate `/consultant_simulator/*` in CloudFront after uploading and verify the public HTTPS URL in Chrome.
+- S3 bucket versioning is enabled, but preserving a local copy of the current prefix before a release is still recommended.
